@@ -2,6 +2,12 @@ package class02;
 
 public class Code01_FindNumInSortedMatrix {
 
+	/**
+	 * 根据大小选择遍历方向
+	 * @param matrix
+	 * @param K
+	 * @return
+	 */
 	public static boolean isContains(int[][] matrix, int K) {
 		int row = 0;
 		int col = matrix[0].length - 1;
