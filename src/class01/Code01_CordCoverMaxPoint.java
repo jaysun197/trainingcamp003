@@ -4,6 +4,12 @@ import java.util.Arrays;
 
 public class Code01_CordCoverMaxPoint {
 
+	/**
+	 * 遍历arr中每个数a,以a为结尾，求开头的index
+	 * @param arr
+	 * @param L
+	 * @return
+	 */
 	public static int maxPoint1(int[] arr, int L) {
 		int res = 1;
 		for (int i = 0; i < arr.length; i++) {
@@ -28,6 +34,12 @@ public class Code01_CordCoverMaxPoint {
 		return index;
 	}
 
+	/**
+	 * 使用单调栈，left和right都不回退
+	 * @param arr
+	 * @param L
+	 * @return
+	 */
 	public static int maxPoint2(int[] arr, int L) {
 		int left = 0;
 		int right = 0;

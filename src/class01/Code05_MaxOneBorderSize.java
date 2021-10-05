@@ -2,6 +2,13 @@ package class01;
 
 public class Code05_MaxOneBorderSize {
 
+	/**
+	 * 预处理
+	 * 根据m填写right和down
+	 * @param m 原数组
+	 * @param right 右侧连续1的数量
+	 * @param down 下方连续1的数量
+	 */
 	public static void setBorderMap(int[][] m, int[][] right, int[][] down) {
 		int r = m.length;
 		int c = m[0].length;
@@ -31,11 +38,18 @@ public class Code05_MaxOneBorderSize {
 		}
 	}
 
+	/**
+	 * O(N^3)，不能再低了，因为这是构成一个正方形必须的复杂度。长方形需要枚举2个点，就是O(N^4)
+	 * @param m
+	 * @return
+	 */
 	public static int getMaxSize(int[][] m) {
+		//准备两个预处理数组并填好
 		int[][] right = new int[m.length][m[0].length];
 		int[][] down = new int[m.length][m[0].length];
 		setBorderMap(m, right, down); // O(N^2); + 
-		
+
+		//枚举正方形的边长，一定是row和column中小的那个值
 		for (int size = Math.min(m.length, m[0].length); size != 0; size--) {
 			if (hasSizeOfBorder(size, right, down)) {
 				return size;
@@ -45,8 +59,10 @@ public class Code05_MaxOneBorderSize {
 	}
 
 	public static boolean hasSizeOfBorder(int size, int[][] right, int[][] down) {
+		//枚举矩阵中任意一个点(i,j)
 		for (int i = 0; i != right.length - size + 1; i++) {
 			for (int j = 0; j != right[0].length - size + 1; j++) {
+				//当以(i,j)构成的正方形的3个点中对应右边和下边都有1的时候，就构成一个正方形了
 				if (right[i][j] >= size && down[i][j] >= size
 						&& right[i + size - 1][j] >= size
 						&& down[i][j + size - 1] >= size) {

@@ -1,7 +1,13 @@
 package class01;
 
 public class Code06_MakeNo {
-	
+
+	/**
+	 * 要生成size长度的达标数组arr，先拿到size/2的达标数组arrH
+	 * 再将arrH变成两个arrH2，左边为arrH求奇数，右边为arrH求偶数
+	 * @param size
+	 * @return
+	 */
 	// 生成长度为size的达标数组
 	// 达标：对于任意的 i<k<j，满足   [i] + [j]  != [k] * 2
 	public static int[] makeNo(int size) {

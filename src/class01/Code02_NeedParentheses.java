@@ -2,6 +2,12 @@ package class01;
 
 public class Code02_NeedParentheses {
 
+	/**
+	 * 用一个变量来统计 '('=1 ; ')'=-1
+	 * 如果为负数，则肯定多了')'
+	 * @param s
+	 * @return
+	 */
 	public static boolean valid(String s) {
 		char[] str = s.toCharArray();
 		int count = 0;
@@ -14,6 +20,12 @@ public class Code02_NeedParentheses {
 		return count == 0;
 	}
 
+	/**
+	 * 用一个变量来统计 '('=1 ; ')'=-1
+	 * 用另一个变量统计当多出 ）时需要的（ 数量
+	 * @param s
+	 * @return
+	 */
 	public static int needParentheses(String s) {
 		char[] str = s.toCharArray();
 		int count = 0;

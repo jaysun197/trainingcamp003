@@ -14,6 +14,12 @@ public class Code07_MaxSumInTree {
 
 	public static int maxSum = Integer.MIN_VALUE;
 
+	/**
+	 * 第一问解法一
+	 * 二叉树递归求和
+	 * @param head
+	 * @return
+	 */
 	public static int maxPath(Node head) {
 		maxSum = Integer.MIN_VALUE;
 		p(head, 0);
@@ -33,6 +39,12 @@ public class Code07_MaxSumInTree {
 		}
 	}
 
+	/**
+	 * 第一问解法二
+	 * 二叉树的递归套路
+	 * @param head
+	 * @return
+	 */
 	public static int maxDis(Node head) {
 		if (head == null) {
 			return 0;
@@ -40,22 +52,32 @@ public class Code07_MaxSumInTree {
 		return process2(head);
 	}
 
-	// x为头的整棵树上，最大路径和是多少，返回。
+	// 返回信息：x为头的整棵树上，最大路径和是多少，返回。
 	// 路径要求，一定从x出发，到叶节点，算做一个路径
 	public static int process2(Node x) {
 		if (x.left == null && x.right == null) {
+			//没有左右孩子，此时的最大和就是他自己的值
 			return x.value;
 		}
 		int next = Integer.MIN_VALUE;
 		if (x.left != null) {
+			//左边拿到一个最大和
 			next = process2(x.left);
 		}
 		if (x.right != null) {
+			//右边拿到一个最大和
 			next = Math.max(next, process2(x.right));
 		}
+		//左右最大的和里边较大的值，再加上自己
 		return x.value + next;
 	}
 
+	/**
+	 * 第二问
+	 * 只能使用二叉树的递归套路
+	 * @param head
+	 * @return
+	 */
 	public static int maxSum2(Node head) {
 		if (head == null) {
 			return 0;
@@ -64,7 +86,9 @@ public class Code07_MaxSumInTree {
 	}
 
 	public static class Info {
+		//该节点下整棵树中最大的和
 		public int allTreeMaxSum;
+		//必须以该节点为头，向左或者向右整颗数的最大和
 		public int fromHeadMaxSum;
 
 		public Info(int all, int from) {
@@ -103,6 +127,11 @@ public class Code07_MaxSumInTree {
 		return new Info(allTreeMaxSum, fromHeadMaxSum);
 	}
 
+	/**
+	 * 第三问
+	 * @param x
+	 * @return
+	 */
 	// 1）X无关的时候， 1， 左树上的整体最大路径和 2， 右树上的整体最大路径和
 	// 2) X有关的时候 3， x自己 4， x往左走 5，x往右走 6, 既往左，又往右
 	public static Info f3(Node x) {
@@ -131,6 +160,7 @@ public class Code07_MaxSumInTree {
 
 		int p6 = Integer.MIN_VALUE;
 		if (leftInfo != null && rightInfo != null) {
+			//多出一种情况，x为路径中间的数
 			p6 = x.value + leftInfo.fromHeadMaxSum + rightInfo.fromHeadMaxSum;
 		}
 
@@ -139,8 +169,16 @@ public class Code07_MaxSumInTree {
 		return new Info(allTreeMaxSum, fromHeadMaxSum);
 	}
 
+
+
 	public static int max = Integer.MIN_VALUE;
 
+	/**
+	 * 用一个共用的max
+	 * 可以不用看
+	 * @param head
+	 * @return
+	 */
 	public static int bigShuai(Node head) {
 		if (head.left == null && head.right == null) {
 			max = Math.max(max, head.value);
