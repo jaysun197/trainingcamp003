@@ -3,6 +3,19 @@ package class02;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ *思路：
+ * 假定该数组arr是有序的，长度为n，需要找第k小的二元组(x,y)。
+ * arr[0]构成了n个元组，arr[1]构成了n个元组...直到arr[i]，arr[i]就是要找的x，x=arr[i]=arr[(k-1)/n]，记为M。
+ * 遍历数组，找到小于M的数字为a个，等于M的数为b个，因为第一个数用小于M的数组成的元组一定小于(M,y)
+ * 那就知道所有的元组中小于(M,y)的元组个数为a*n个，于是该问题就变成了需要找到第k-a*n（记为S）小的元组(M,y)
+ * 因为等于M的数有b个，arr[0]构成b个元组，arr[1]构成b个元组...直到arr[j]，arr[j]就要要找的y，y=arr[j]=arr[(S-1)/b]，即y=arr[(k-a*n)/b]
+ *
+ * 优化：
+ * 因为需要假定数组有序，排序提高了复杂度。但真的需要排序吗？
+ * 只是需要找到第arr[i],arr[j]，就是arr中第i和第j位置的数（如果排好序的话），这就是一个求无序arr中第k小的数。
+ * 最快的是模拟快排：O(n)或者bfprt：O(n)
+ */
 public class Code07_KthMinPair {
 
 	public static class Pair {

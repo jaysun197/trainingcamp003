@@ -1,5 +1,12 @@
 package class02;
 
+/**
+ * 二元组：
+ * 单调栈的解法：两个指针从两边向中间走。arr[left]==arr[left-1]时跳过
+ *
+ * 三元组：
+ * 固定第一个数为arr[i],i到n-1之间的数采用二元组的求法。arr[i]==arr[i-1]的时候跳过
+ */
 public class Code06_PrintUniquePairAndTriad {
 
 	public static void printUniquePair(int[] arr, int k) {

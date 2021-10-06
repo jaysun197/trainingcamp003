@@ -3,7 +3,8 @@ package class02;
 public class Code01_FindNumInSortedMatrix {
 
 	/**
-	 * 根据大小选择遍历方向
+	 * 从右上角开始找，往下或者往左（或者从左下角开始，往右或者往上），最多走一个长+宽的步数
+	 * 如果越界了都没找到，就是不存在
 	 * @param matrix
 	 * @param K
 	 * @return

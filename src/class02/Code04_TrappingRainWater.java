@@ -1,12 +1,31 @@
 package class02;
 
+/**
+ * 思路：
+ * 假设来到了i位置，求出i位置能储多少水
+ * 求出i位置左边的maxL，右边的maxR，则i位置的水位=max(min(maxL,maxR)-arr[i],0)
+ * 所有位置的水位加起来就是题解。
+ * 为了快速拿到maxL和maxR，准备两个最大值预处理数组
+ * 如    [3,4,2,5,6,2,4] 得出
+ * maxLs:[3,4,4,5,6,6,6]
+ * maxRs:[6,6,6,6,6,4,4]
+ *
+ * 优化方案：
+ * 不用预处理数组，改用两个指针L,R分别从两侧往中间走，用两个变量分别记住走过的maxL和maxR
+ * 0和n-1位置不用考虑，不会储下水，直接来到1和n-2位置，这时候如果：
+ * 1）maxL<maxR,就计算L位置的水位
+ * 2）maxR<maxL,就计算R位置的水位
+ * 3）相等，可以LR都计算一下。
+ * 计算完移动计算过的指针，继续计算下个位置
+ *
+ * 总结：最大值预处理数组可以用指针方案优化
+ */
 public class Code04_TrappingRainWater {
+
 
 	/*
 	 * 给定一个正整数数组arr，把arr想象成一个直方图。返回这个直方图如果装水，能装下几格水？
-	 * 
 	 */
-
 	public static int water1(int[] arr) {
 		if (arr == null || arr.length < 2) {
 			return 0;
@@ -27,6 +46,11 @@ public class Code04_TrappingRainWater {
 		return water;
 	}
 
+	/**
+	 * 使用预处理数组
+	 * @param arr
+	 * @return
+	 */
 	public static int water2(int[] arr) {
 		if (arr == null || arr.length < 2) {
 			return 0;
@@ -69,6 +93,11 @@ public class Code04_TrappingRainWater {
 		return water;
 	}
 
+	/**
+	 * 指针最优解
+	 * @param arr
+	 * @return
+	 */
 	public static int water4(int[] arr) {
 		if (arr == null || arr.length < 2) {
 			return 0;

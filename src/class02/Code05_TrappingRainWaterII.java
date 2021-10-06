@@ -3,6 +3,21 @@ package class02;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+/**
+ * 二维蓄水的问题
+ * 解法：
+ * 准备一个二维标记数组flag
+ * 准备一个变量为全局max
+ * 将数组arr中四周的数放入小根堆heap中，放入后标记为true
+ * 弹出堆顶x，更新max，将x四周的数放入heap中，放入的时候结算该位置的水量为max(0,max-该位置的值)，放入后标记为true
+ * 继续弹出堆顶y，周而复始，直到heap空了
+ *
+ * 总结：
+ * 1. 从四周开始，找到一个薄弱点a，记为max，结算与a相连的低洼所有区域湖1；然后在找下一个薄弱点b，结算与b相连的低洼所有区域湖2
+ * 湖2一定比湖1的底部更高，继续找到湖3...
+ * 2. 一维蓄水寻找薄弱点用两个变量就可以了，因为是从两边往中间；二维蓄水寻找薄弱点就需要用堆，因为是从四周往中心
+ * 3. 复杂度：遍历了所有的数的时候外加一个堆的复杂度：O(N*M*log(heap的平均size，记为K，最大为N*M))
+ */
 public class Code05_TrappingRainWaterII {
 
 	public static class Node {

@@ -38,6 +38,14 @@ public class Code03_MaxABSBetweenLeftAndRight {
 		return max;
 	}
 
+	/**
+	 * 求出全局最大值max
+	 * 当max划分在左边，力求右边的局部最大值a尽可能小，n位置的数不能避免，就让n位置的数划分在右边
+	 * 当max划分在右边，力求左边的局部最大值b尽可能小，0位置的数不能避免，就让0位置的数划分在左边
+	 * 题解：max-min(a,b)
+	 * @param arr
+	 * @return
+	 */
 	public static int maxABS3(int[] arr) {
 		int max = Integer.MIN_VALUE;
 		for (int i = 0; i < arr.length; i++) {
