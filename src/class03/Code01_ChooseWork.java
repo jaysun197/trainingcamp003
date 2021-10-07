@@ -4,6 +4,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.TreeMap;
 
+/**
+ * 将工作排序，hard递增，hard相同money递减
+ * hard相同的只保留组长，其他的删除
+ * hard增加了，money没有增加的删除
+ * 将筛选后的工作放入有序表(hard,money)中，找到hard符合条件最高的key
+ */
 public class Code01_ChooseWork {
 
 	public static class Job {

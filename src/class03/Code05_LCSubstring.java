@@ -1,5 +1,12 @@
 package class03;
 
+/**
+ * 最长子串，思路：
+ * 定义一张二维表，row是str1的所有字符，column是str2的所有字符
+ * dp[i][j]是指必须以(i,j)结尾的最长公共子串长度
+ * 所以如果str1[i]==str2[j]，那结果就是dp[i-1][j-1]的值加1，否则结果就是0
+ * 复杂度：O(M*N)
+ */
 public class Code05_LCSubstring {
 
 	public static String lcst1(String str1, String str2) {
@@ -44,6 +51,17 @@ public class Code05_LCSubstring {
 		return dp;
 	}
 
+	/**
+	 * 基于二维数组压缩空间：
+	 * 定义两个变量row，col作为出发点的坐标
+	 * 遍历从二维表右上角向左，再向下，来到左下角。在每个点，作为出发点向右下方
+	 *
+	 * 复杂度：O(M*N)
+	 * 并非最优解，最优解为：后缀数组解法，复杂度为O(N+M)
+	 * @param s1
+	 * @param s2
+	 * @return
+	 */
 	public static String lcst2(String s1, String s2) {
 		if (s1 == null || s2 == null || s1.equals("") || s2.equals("")) {
 			return "";
@@ -57,6 +75,7 @@ public class Code05_LCSubstring {
 		while (row < str1.length) {
 			int i = row;
 			int j = col;
+			//len记录相同字符串的长度
 			int len = 0;
 			// 向右下方移动的这一轮
 			while (i < str1.length && j < str2.length) {
@@ -67,18 +86,22 @@ public class Code05_LCSubstring {
 				}
 				// len
 				if (len > max) {
+					//记录最长子串在s1的位置
 					end = i;
 					max = len;
 				}
+				//每个出发点向右下方走
 				i++;
 				j++;
 			}
+			//出发点的轨迹：从二维表右上角向左，再向下，来到左下角
 			if (col > 0) {
 				col--;
 			} else {
 				row++;
 			}
 		}
+		//在最大公共子串长度的位置，向前推len个字符，就是最长的公共子串
 		return s1.substring(end - max + 1, end + 1);
 	}
 

@@ -3,6 +3,13 @@ package class04;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * 解法一：中序遍历（moris遍历）将所有的节点串起来
+ *
+ * 解法二：二叉树递归套路：
+ * 将x节点左树串成树，返回头、尾节点，x节点右树串成树，返回头、尾节点，
+ * 再将x和左尾右头连起来
+ */
 public class Code02_BSTtoDoubleLinkedList {
 
 	public static class Node {
@@ -15,6 +22,7 @@ public class Code02_BSTtoDoubleLinkedList {
 		}
 	}
 
+	//解法一，中序遍历
 	public static Node convert1(Node head) {
 		Queue<Node> queue = new LinkedList<Node>();
 		inOrderToQueue(head, queue);
@@ -35,6 +43,7 @@ public class Code02_BSTtoDoubleLinkedList {
 		return head;
 	}
 
+	//中序遍历进入queue
 	public static void inOrderToQueue(Node head, Queue<Node> queue) {
 		if (head == null) {
 			return;
@@ -44,8 +53,7 @@ public class Code02_BSTtoDoubleLinkedList {
 		inOrderToQueue(head.right, queue);
 	}
 
-
-	
+	//解法二：二叉树递归
 	public static Node convert2(Node head) {
 		if (head == null) {
 			return null;
@@ -81,10 +89,10 @@ public class Code02_BSTtoDoubleLinkedList {
 			rightInfo.start.left = X;
 		}
 		return new Info(
-				// 整棵树的头，
+				// 整棵树的头，有左树的头，就用左树的头
 				leftInfo.start != null ? leftInfo.start : X
 				,
-				// 整棵树的尾
+				// 整棵树的尾，有右树的尾，就用右树的尾
 				rightInfo.end != null ? rightInfo.end : X);
 	}
 

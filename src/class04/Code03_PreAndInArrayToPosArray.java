@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * 考的递归设计
+ *  先序 1, 2, 4, 5, 3, 6, 7  头 左 右
+ *  中序 4, 2, 5, 1, 6, 3, 7  左 头 右
+ *  后续 4, 5, 2, 6, 7, 3, 1  左 右 头
+ *  先序的头，来到了后续的尾
+ */
 public class Code03_PreAndInArrayToPosArray {
 
 	public static class Node {
@@ -16,6 +23,7 @@ public class Code03_PreAndInArrayToPosArray {
 		}
 	}
 
+	//复杂度：O(N^2)
 	public static int[] preInToPos1(int[] pre, int[] in) {
 		if (pre == null || in == null || pre.length != in.length) {
 			return null;
@@ -26,6 +34,20 @@ public class Code03_PreAndInArrayToPosArray {
 		return pos;
 	}
 
+	/**
+	 * 递归
+	 * 设计方式：
+	 * 先序的第一个位置，就是后序的最后一个位置
+	 * @param pre 先序数组
+	 * @param L1 先序开始位置
+	 * @param R1 先序结束位置
+	 * @param in 中序数组
+	 * @param L2
+	 * @param R2
+	 * @param pos 后序数组：空的，等待填写
+	 * @param L3
+	 * @param R3
+	 */
 	//  L1...R1  L2...R2  L3...R3
 	public static void process1(
 			int[] pre, int L1, int R1, 
@@ -34,27 +56,34 @@ public class Code03_PreAndInArrayToPosArray {
 		if (L1 > R1) {
 			return;
 		}
+		//就只有一个数
 		if (L1 == R1) {
 			pos[L3] = pre[L1];
 			return;
 		}
+		//后续的最后一个位置，是先序的第一个位置
 		pos[R3] = pre[L1];
+		//找到先序第一个位置，在中序中的位置
 		int mid = L2;
 		for (; mid <= R2; mid++) {
 			if (in[mid] == pre[L1]) {
 				break;
 			}
 		}
+		//中序决定下个范围
 		int leftSize = mid - L2;
+		//中序被分成了左右两个部分，对左右两个部分分别调用
 		process1(pre, L1 + 1, L1 + leftSize, in, L2, mid - 1, pos, L3, L3 + leftSize - 1);
 		process1(pre, L1 + leftSize + 1, R1, in, mid + 1, R2, pos, L3 + leftSize, R3 - 1);
 	}
 
+	//复杂度：O(N) 一次递归搞定一个数，一共搞定了N个数
 	public static int[] preInToPos2(int[] pre, int[] in) {
 		if (pre == null || in == null || pre.length != in.length) {
 			return null;
 		}
 		int N = pre.length;
+		//将中序的数字做个缓存
 		HashMap<Integer, Integer> inMap = new HashMap<>();
 		for (int i = 0; i < N; i++) {
 			inMap.put(in[i], i);
@@ -74,6 +103,7 @@ public class Code03_PreAndInArrayToPosArray {
 			return;
 		}
 		pos[R3] = pre[L1];
+		//不用遍历直接找
 		int mid = inMap.get(pre[L1]);
 		int leftSize = mid - L2;
 		process2(pre, L1 + 1, L1 + leftSize, in, L2, mid - 1, pos, L3, L3 + leftSize - 1, inMap);

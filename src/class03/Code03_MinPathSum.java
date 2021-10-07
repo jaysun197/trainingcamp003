@@ -2,6 +2,13 @@ package class03;
 
 public class Code03_MinPathSum {
 
+	/**
+	 * dp表含义：
+	 * 来到(i,j)位置时，最小路径和可能是从(i-1,j)来的，也可能是从(i,j-1)来的，就将上面两个位置的值，取一个最小的，加上自己
+	 * 就是来到自己的最小路径和
+	 * @param m
+	 * @return
+	 */
 	public static int minPathSum1(int[][] m) {
 		if (m == null || m.length == 0 || m[0] == null || m[0].length == 0) {
 			return 0;
@@ -11,9 +18,11 @@ public class Code03_MinPathSum {
 		int[][] dp = new int[row][col];
 		dp[0][0] = m[0][0];
 		for (int i = 1; i < row; i++) {
+			//第一列只可能从上一个的数据过来
 			dp[i][0] = dp[i - 1][0] + m[i][0];
 		}
 		for (int j = 1; j < col; j++) {
+			//第一行只可能从左一个的数据过来
 			dp[0][j] = dp[0][j - 1] + m[0][j];
 		}
 		for (int i = 1; i < row; i++) {

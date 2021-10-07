@@ -2,12 +2,17 @@ package class04;
 
 import java.util.TreeMap;
 
+/**
+ * 目录结构
+ * 采用前缀树的解法
+ */
 public class Code01_GetFolderTree {
 
 	public static class Node {
 		// 上一个节点是通过哪条路，到我的
 		public String path;
 		// key : node下级的路   value：node在key这条路上对应的节点是什么
+		// 采用有序表，可以对下级目录排序
 		public TreeMap<String, Node> nextMap;
 		
 		public Node(String p) {
@@ -33,10 +38,11 @@ public class Code01_GetFolderTree {
 		for (String foldPath : folderPaths) { // 拿出每一个绝对路径
 			String[] paths = foldPath.split("\\\\"); // java 特性，用一个"\"做分割的意思
 			Node cur = head;
-			for (int i = 0; i < paths.length; i++) { // "a"  , "b"   ,"c"
+			for (int i = 0; i < paths.length; i++) { // "a"  , "b"   ,"c" 依次深入树中建立好
 				if (!cur.nextMap.containsKey(paths[i])) {
 					cur.nextMap.put(paths[i], new Node(paths[i]));
 				}
+				//深入树中
 				cur = cur.nextMap.get(paths[i]);
 			}
 		}
@@ -50,6 +56,7 @@ public class Code01_GetFolderTree {
 			System.out.println(get4nSpace(level) + node.path);
 		}
 		for (Node next : node.nextMap.values()) {
+			//深度优先遍历
 			printProcess(next, level + 1);
 		}
 	}

@@ -5,6 +5,15 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 
+/**
+ * 词频求topK，思路：
+ * 先用hash表建立词频
+ * 再遍历hash表将每个词，按词频经过与堆顶比较，放入size=topK的小根堆中。
+ *
+ * 优化：
+ * 不用堆，变成一个从无序的数组中寻找第k,k-1,k-2...1小的问题。使用改写的快排寻找.
+ * 复杂度：O(N)
+ */
 public class Code06_TopKTimes {
 
 	public static class Node {
@@ -38,13 +47,15 @@ public class Code06_TopKTimes {
 				map.put(str, map.get(str) + 1);
 			}
 		}
-		topK = Math.min(arr.length, topK);
+//		topK = Math.min(arr.length, topK);
 		PriorityQueue<Node> heap = new PriorityQueue<>(new NodeComparator());
 		for (Entry<String, Integer> entry : map.entrySet()) {
 			Node cur = new Node(entry.getKey(), entry.getValue());
 			if (heap.size() < topK) {
+				//堆没满，直接进
 				heap.add(cur);
 			} else {
+				//满了，就比较一下堆顶再进
 				if (heap.peek().times < cur.times) {
 					heap.poll();
 					heap.add(cur);

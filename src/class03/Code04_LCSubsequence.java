@@ -1,5 +1,8 @@
 package class03;
 
+/**
+ * 子序列、子串问题： 以。。。为开头/结尾
+ */
 public class Code04_LCSubsequence {
 
 	public static int lcs(String s1, String s2) {
@@ -10,13 +13,25 @@ public class Code04_LCSubsequence {
 		return process(str1, str2, N - 1, M - 1);
 	}
 
+	/**
+	 * 为什么选这种递归？
+	 * 递归模型3：
+	 * 一个样本作行，一个样本作列的递归模型
+	 * @param str1
+	 * @param str2
+	 * @param i1
+	 * @param i2
+	 * @return
+	 */
 	// str1[0....i1] 与 str2[0......i2]的最长公共子序列长度是多少？
 	public static int process(char[] str1, char[] str2, int i1, int i2) {
 		if (i1 == 0 && i2 == 0) {
+			//只有一个字符
 			return str1[i1] == str2[i2] ? 1 : 0;
 		}
 		// i1 和 i2 不同时为0
 		if (i1 == 0) { // str1[0..0] str2[0...i2 - 1]
+			//结尾相同，或者str1[0..0] str2[0...i2 - 1] 结果为1
 			return ((str1[i1] == str2[i2]) || process(str1, str2, i1, i2 - 1) == 1) ? 1 : 0;
 		}
 
@@ -53,6 +68,7 @@ public class Code04_LCSubsequence {
 		}
 		for (int i = 1; i < N; i++) {
 			for (int j = 1; j < M; j++) {
+				//比较的时候，p1可以不用参与，p1是左上角的位置，p2是左边的位置，p2一定比p1大
 				dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
 				if (str1[i] == str2[j]) {
 					dp[i][j] = Math.max(dp[i][j], dp[i - 1][j - 1] + 1);

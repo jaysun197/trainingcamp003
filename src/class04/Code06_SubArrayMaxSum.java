@@ -1,5 +1,10 @@
 package class04;
 
+/**
+ * 可以用假设答案发，来设计流程
+ * 假设i->k位置是最大子数组和。那么x->i-1位置的累加和一定是负数，i->y(y<k)位置的累加和一定是正数
+ * 所以设计变量curr，收集当前的累加和，每收集一个数，就更新一下sum。如果curr<0了，这一段的收集就放弃了，将curr置零，从下面一个数开始继续收集
+ */
 public class Code06_SubArrayMaxSum {
 
 	public static int maxSum(int[] arr) {
