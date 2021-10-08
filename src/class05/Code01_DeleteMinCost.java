@@ -5,6 +5,26 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * 该题目有多种解法，需要根据数据量估算复杂度，决定采取哪种方案
+ * 方案一：
+ * 枚举s2的所有子序列O(2^M)，针对对每个子序列用KMP算法查找在s1中是否存在O(N)，如果存在，用s2长度-s2子序列长度，
+ * 按s2子序列长度由大到小遍历所有子序列收集答案取最小值即题解
+ * 时间复杂度：O(N*2^M)
+ *
+ * 方案二：
+ * 枚举s1的所有子串O(N^2)，对每个子串用，看s2需要多少编辑距离变成该子串，编辑距离中只有删除操作O(N*M)
+ * 收集所有的编辑距离，取最小值即题解
+ * 时间复杂度：O(N^3*M)
+ * 方案二优化1：枚举s1所有子串时，首字母是同一个（前缀相同）的所有子串，共用一张DP表，时间复杂度收敛到O(N^2*M)
+ * 方案二优化2：这是基于优化1的具体实现，优化一些细节。
+ * 整体一张DP表就可以了。
+ * 外侧一个大循环，表示开始的列
+ * 从第0列开始，求s2转为s1[0->0]的代价，s2转为s1[0->1]的代价...s2转为s1[0->X]的代价，0->X的长度等于s2的长度，后面的都不用填了，s2不可能通过删除转为一个长度大于它的字符
+ * 然后从第1列开始，求s2转为s1[1->1]的代价，s2转为s1[1->2]的代价...s2转为s1[1->Y]的代价，...
+ * ...
+ *
+ */
 public class Code01_DeleteMinCost {
 
 	// 题目：
@@ -30,6 +50,7 @@ public class Code01_DeleteMinCost {
 		return s2.length();
 	}
 
+	//枚举所有的子序列，来到了index位置，index的值要还是不要
 	public static void process(char[] str2, int index, String path, List<String> list) {
 		if (index == str2.length) {
 			list.add(path);
@@ -57,12 +78,13 @@ public class Code01_DeleteMinCost {
 		if (s1.length() == 0 || s2.length() == 0) {
 			return s2.length();
 		}
+		//默认系统最大值
 		int ans = Integer.MAX_VALUE;
 		char[] str2 = s2.toCharArray();
 		for (int start = 0; start < s1.length(); start++) {
 			for (int end = start + 1; end <= s1.length(); end++) {
 				// str1[start....end]
-				// substring -> [ 0,1 )
+				// substring方法左闭右开，所以end需要+1
 				ans = Math.min(ans, distance(str2, s1.substring(start, end).toCharArray()));
 			}
 		}
@@ -86,17 +108,23 @@ public class Code01_DeleteMinCost {
 		// 也就是str2[i] == s1sub[j] 的条件下，dp[i][j] = dp[i-1][j-1]
 		dp[0][0] = str2[0] == s1sub[0] ? 0 : Integer.MAX_VALUE;
 		for (int j = 1; j < col; j++) {
+			//当s2只有一个字符，s1sub有j+1个字符时，把s2减成s1sub，那是不可能的
 			dp[0][j] = Integer.MAX_VALUE;
 		}
 		for (int i = 1; i < row; i++) {
+			//当s1sub只有一个字符，s2有j+1个字符时，把s2减成s1sub，只有两种情况，
+			// 只要之前出现了s1sub[0]位置的字符，或者当前s2[i]==s1sub[0]，那删除的代价就是s2的当前长度-1，就是i
 			dp[i][0] = (dp[i - 1][0] != Integer.MAX_VALUE || str2[i] == s1sub[0]) ? i : Integer.MAX_VALUE;
 		}
 		for (int i = 1; i < row; i++) {
 			for (int j = 1; j < col; j++) {
+				//默认系统最大
 				dp[i][j] = Integer.MAX_VALUE;
 				if (dp[i - 1][j] != Integer.MAX_VALUE) {
+					//s2前面的能够减成s1sub，那就把s2[i]位置减掉就好了
 					dp[i][j] = dp[i - 1][j] + 1;
 				}
+				//s2前面的能够减成s1sub前面的，而且当前位置右相等，那代价就是s2前面的能够减成s1sub前面的
 				if (str2[i] == s1sub[j] && dp[i - 1][j - 1] != Integer.MAX_VALUE) {
 					dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);
 				}
@@ -107,6 +135,7 @@ public class Code01_DeleteMinCost {
 	}
 
 	// 解法二的优化
+	//
 	public static int minCost3(String s1, String s2) {
 		if (s1.length() == 0 || s2.length() == 0) {
 			return s2.length();
@@ -116,21 +145,28 @@ public class Code01_DeleteMinCost {
 		int M = str2.length;
 		int N = str1.length;
 		int[][] dp = new int[M][N];
+		//M就是系统最大值
 		int ans = M;
 		for (int start = 0; start < N; start++) { // 开始的列数
+			//这就是左上角位置，除非两个值相等，否则不能转化完成
 			dp[0][start] = str2[0] == str1[start] ? 0 : M;
 			for (int row = 1; row < M; row++) {
+				//依次填写往下的格子
 				dp[row][start] = (str2[row] == str1[start] || dp[row - 1][start] != M) ? row : M;
 			}
 			ans = Math.min(ans, dp[M - 1][start]);
 			// 以上已经把start列，填好
 			// 以下要把dp[...][start+1....N-1]的信息填好
-			// start...end end - start +2
+			// start...end end - start + 1
+			// 这里从有效的第二列开始，往后依次填s2.length个长度（不越界的情况下）
 			for (int end = start + 1; end < N && end - start < M; end++) {
 				// 0... first-1 行 不用管
+				// 从有效的第二列开始，上面有一定的长度不要管，因为短的s2不可能通过删除变为长的s1
 				int first = end - start;
+				// 这里的第一个值，因为s2，s1长度一样，所以值要么是0，要么就是M
 				dp[first][end] = (str2[first] == str1[end] && dp[first - 1][end - 1] == 0) ? 0 : M;
 				for (int row = first + 1; row < M; row++) {
+					// for循环是依次往下填写
 					dp[row][end] = M;
 					if (dp[row - 1][end] != M) {
 						dp[row][end] = dp[row - 1][end] + 1;
