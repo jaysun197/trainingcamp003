@@ -1,5 +1,37 @@
 package class06;
 
+/**
+ * 范围尝试模型
+ * 枚举所有的运算符char[i]，运算符左边是一个范围，右边是一个范围，讨论以该运算符为最后一步的情况下，共有多少种方案
+ * 定义函数int f(char[] str, L, R, boolean desired) 返回方案数
+ * 1. 期待true
+ * a) 如果char[i] = '&'
+ * ways += f(str,0,i-1,true) * f(str,i+1,n-1,true)
+ * b) 如果char[i] = '|'
+ * ways += f(str,0,i-1,true) * f(str,i+1,n-1,false)
+ * ways += f(str,0,i-1,false) * f(str,i+1,n-1,true)
+ * ways += f(str,0,i-1,true) * f(str,i+1,n-1,true)
+ * c) 如果char[i] = '^'
+ * ways += f(str,0,i-1,true) * f(str,i+1,n-1,false)
+ * ways += f(str,0,i-1,false) * f(str,i+1,n-1,true)
+ * 2. 期待false
+ * a) 如果char[i] = '&'
+ * ways += f(str,0,i-1,false) * f(str,i+1,n-1,true)
+ * ways += f(str,0,i-1,true) * f(str,i+1,n-1,false)
+ * ways += f(str,0,i-1,false) * f(str,i+1,n-1,false)
+ * b) 如果char[i] = '|'
+ * ways += f(str,0,i-1,false) * f(str,i+1,n-1,false)
+ * c) 如果char[i] = '^'
+ * ways += f(str,0,i-1,true) * f(str,i+1,n-1,true)
+ * ways += f(str,0,i-1,false) * f(str,i+1,n-1,false)
+ *
+ * 该动态规划
+ * 因为有三个可变参数，其中一个是bool值，两张表搞定，一张true表一张false表
+ * 需要注意，该表中
+ * 1、因为L<=R,所有一半的地方不需要填写
+ * 2、因为L,R只讨论字符，所有运算符的地方不需要填写
+ *
+ */
 public class Code02_ExpressionNumber {
 
 	public static boolean isValid(char[] exp) {
@@ -89,13 +121,17 @@ public class Code02_ExpressionNumber {
 		int[][] tMap = new int[N][N];
 		int[][] fMap = new int[N][N];
 		for (int i = 0; i < N; i += 2) {
+			//base case，都是对角线的位置
 			tMap[i][i] = str[i] == '1' ? 1 : 0;
 			fMap[i][i] = str[i] == '0' ? 1 : 0;
 		}
-		for (int row = N - 3; row >= 0; row -= 2) {
-			for (int col = row + 2; col < N; col += 2) {
+		//n-1，只有一个值就是row=col=n-1的位置已经填过了，n-2符号位，不讨论
+		for (int row = N - 3; row >= 0; row -= 2) {//步长为2
+			//col=row位置已经填好，col=row+1符号位不讨论
+			for (int col = row + 2; col < N; col += 2) {//步长为2
 				// row..col tMap fMap
-				for (int i = row + 1; i < col; i += 2) {
+				// 从最后一行开始，填好后往上填写，row+1是因为这里需要讨论运算符
+				for (int i = row + 1; i < col; i += 2) {//步长为2
 					switch (str[i]) {
 					case '&':
 						tMap[row][col] += tMap[row][i - 1] * tMap[i + 1][col];
