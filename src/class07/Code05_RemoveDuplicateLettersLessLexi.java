@@ -1,5 +1,19 @@
 package class07;
 
+/**
+ * 在str中，每种字符都要保留一个，让最后的结果，字典序最小 ，并返回
+ * str字典序：
+ * 1）如果长度相等，从高位到低位比较字典序
+ * 2）如果长度不等，较短的str后面补0直到等长，再比较
+ * 思路：贪心算法
+ * 1. 给str中的每个char建立词频统计
+ * 2. 遍历str，每走过一个char，词频--，直到出现了某个词频减为了0
+ * 3. 在目前走过的所有char中，挑出从前往后第一次出现的字典序最下的char，假设是a
+ * 4. a左边的所有字符都删除，右边的a也删除，a自己也删除，剩下的str'继续以上流程，直到str长度变0
+ *
+ * 复杂度：假设str长度为k，每遍历一次str搞定一个char
+ * O(K*N)
+ */
 public class Code05_RemoveDuplicateLettersLessLexi {
 
 	// 在str中，每种字符都要保留一个，让最后的结果，字典序最小 ，并返回
@@ -7,18 +21,24 @@ public class Code05_RemoveDuplicateLettersLessLexi {
 		if (str == null || str.length() < 2) {
 			return str;
 		}
+		//词频表，阿斯克码一共256个
 		int[] map = new int[256];
 		for (int i = 0; i < str.length(); i++) {
 			map[str.charAt(i)]++;
 		}
 		int minACSIndex = 0;
 		for (int i = 0; i < str.length(); i++) {
+			//记录下第一次出现的最小的ask码下标
 			minACSIndex = str.charAt(minACSIndex) > str.charAt(i) ? i : minACSIndex;
+			//--，并判断，有0赶紧停
 			if (--map[str.charAt(i)] == 0) {
 				break;
 			}
 		}
-		return String.valueOf(str.charAt(minACSIndex)) + removeDuplicateLetters1(
+		//挑出来的第一个char，加上后面的str'继续挑
+		return String.valueOf(str.charAt(minACSIndex)) +
+				//从第一个char右边开始，把第一个char都删掉后继续挑
+				removeDuplicateLetters1(
 				str.substring(minACSIndex + 1).replaceAll(String.valueOf(str.charAt(minACSIndex)), ""));
 	}
 

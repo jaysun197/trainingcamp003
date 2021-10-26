@@ -1,5 +1,17 @@
 package class07;
 
+/**
+ * 找不重复的最长子串
+ * 思路：
+ * 子串子数组问题，一般都是考虑以...为开头/结尾
+ * 本题为动态规划
+ * dp[i]:以arr[i]结尾的最长子串长度：
+ * 看下上次arr[i]字符出现的位置a
+ * 看下dp[i-1]的位置b
+ * 位置a和b哪个离i近，取哪个,假设a近
+ * dp[i] = i-a
+ *
+ */
 public class Code06_LongestNoRepeatSubstring {
 
 	public static int maxUnique(String str) {

@@ -3,6 +3,17 @@ package class06;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * 将正数数组arr，切成4个相等的部分，切的位置不算
+ * 思路：
+ * 遍历arr枚举第一刀的位置，第一刀只能从1位置开始，到n-6位置位置，因为要给前面留一个数，后面要留2刀和3个数
+ * 第一刀来到了i位置
+ * 1. 需要知道该位置的leftSum，可以用一个变量，在遍历arr时不断累积leftSum
+ * 2. 需要知道有没有第二刀以及其位置，第二刀的leftSum=第一刀的leftSum * 2 + arr[i];可以准备一个预处理map将每个位置的leftSum和index
+ * 放入map，方便快速查找
+ * 3. 如果3刀都找到了，切最后一块数的和也一样，返回true
+ *
+ */
 public class Code05_Split4Parts {
 
 	public static boolean canSplits1(int[] arr) {
@@ -44,10 +55,11 @@ public class Code05_Split4Parts {
 		if (arr == null || arr.length < 7) {
 			return false;
 		}
-		// key 某一个累加和， value出现的位置
+		// key 某一个累加和， 累加和为key的下一个位置
 		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 		int sum = arr[0];
 		for (int i = 1; i < arr.length; i++) {
+			//此时累加和是arr[0],但加入的是1
 			map.put(sum, i);
 			sum += arr[i];
 		}

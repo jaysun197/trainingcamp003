@@ -1,5 +1,42 @@
 package class08;
 
+/**
+ * 通过一些任意数量的普通币，和一些固定数量的纪念币，组成一个面值的方法数
+ * 思路：本题为两个动态规划，中等难度
+ * 普通币：
+ * dp[i][j]:0~i位置的币，随意使用0-无穷个，组成面值j的方法数
+ * 规模：dp[n-1][money+1]
+ * 第一列
+ * dp[0..n-1][0]=1
+ * 第一行
+ * dp[0][0..money+1]=j是arr[i]的整数倍？1：0
+ * 普通位置：
+ * dp[i][j]=
+ * i位置的币使用0张：dp[i-1][j]
+ * + i位置的币使用1张：dp[i-1][j-arr[i]]
+ * + i位置的币使用2张：dp[i-1][j-2*arr[i]]
+ * + ...
+ * 优化：
+ * dp[i][j-arr[i]]=
+ * dp[i-1][j-arr[i]] + dp[i-1][j-2*arr[i]] +...
+ * 所以dp[i][j] = dp[i-1][j] + dp[i][j-arr[i]]
+ *
+ * 纪念币：
+ * dp[i][j]:0~i位置的币，随意使用0-1张，组成面值j的方法数
+ * 规模同上
+ * 第一列同上
+ * 第一行：if arr[0]==j 1 else 0
+ * dp[i][j]=
+ * i位置不要：dp[i-1][j]
+ * + i位置要：dp[i][j-arr[i]]
+ *
+ * 有了两张表，看最后一行：
+ * ans=
+ * dp1[n-1][0] * dp2[n-1][k]
+ * + dp1[n-1][1] * dp2[n-1][k-1]
+ * + dp1[n-1][2] * dp2[n-1][k-2]
+ * + ...
+ */
 public class Code02_MoneyWays {
 
 	public static int moneyWays(int[] arbitrary, int[] onlyone, int money) {
@@ -12,9 +49,11 @@ public class Code02_MoneyWays {
 		// 任意张 的数组， 一张的数组，不可能都没有
 		int[][] dparb = getDpArb(arbitrary, money);
 		int[][] dpone = getDpOne(onlyone, money);
+		//没有普通币，就用纪念币组成
 		if (dparb == null) { // 任意张的数组没有，一张的数组有
 			return dpone[dpone.length - 1][money];
 		}
+		//没有纪念币，就用普通币组成
 		if (dpone == null) { // 任意张的数组有，一张的数组没有
 			return dparb[dparb.length - 1][money];
 		}
@@ -29,6 +68,7 @@ public class Code02_MoneyWays {
 		if (arr == null || arr.length == 0) {
 			return null;
 		}
+		//列：搞定0..money元，所以一共长度为money+1
 		int[][] dp = new int[arr.length][money + 1];
 		// dp[i][j] 0..i券 自由选择张数， 搞定j元， 有多少方法？
 

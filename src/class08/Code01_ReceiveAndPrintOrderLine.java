@@ -2,6 +2,16 @@ package class08;
 
 import java.util.HashMap;
 
+/**
+ * 接受非连续的信息，串成连续的信息后打印
+ * 思路：该题较为简单
+ * 准备两个map，key：编号，value：信息
+ * head记录开头节点，tail记录结尾节点。
+ * 接受了一个节点编号为i，将i封装成单链表节点node放入head和tail中
+ * 查看tail中有没有i-1节点，它的next指向i，i-1从tail中删掉，且i从head中删掉
+ * 查看head中有没有i+1节点，作为i的next，i+1从head中删掉，且i从tail中删掉
+ *
+ */
 public class Code01_ReceiveAndPrintOrderLine {
 
 	public static class Node {
@@ -16,11 +26,13 @@ public class Code01_ReceiveAndPrintOrderLine {
 	public static class MessageBox {
 		private HashMap<Integer, Node> headMap;
 		private HashMap<Integer, Node> tailMap;
+		//在等哪个编号的节点，等到以后，就可以打印一串了
 		private int waitPoint;
 
 		public MessageBox() {
 			headMap = new HashMap<Integer, Node>();
 			tailMap = new HashMap<Integer, Node>();
+			//刚开始就在等1号
 			waitPoint = 1;
 		}
 
@@ -53,12 +65,15 @@ public class Code01_ReceiveAndPrintOrderLine {
 
 		private void print() {
 			Node node = headMap.get(waitPoint);
+			//删掉头
 			headMap.remove(waitPoint);
 			while (node != null) {
 				System.out.print(node.info + " ");
 				node = node.next;
+				//最终跳出循环时，waitPoint就是下个等待的节点编号
 				waitPoint++;
 			}
+			//删掉尾
 			tailMap.remove(waitPoint-1);
 			System.out.println();
 		}

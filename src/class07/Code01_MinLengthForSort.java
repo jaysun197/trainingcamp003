@@ -1,5 +1,13 @@
 package class07;
 
+/**
+ * 如果排序，最少需要排多少长度：
+ * 思路：找出数组左侧不用排序的部分，和右侧不用排序的部分，中间必定要排序
+ * 左侧：
+ * 正向遍历arr，来到数a，与a左侧的max左比较如果a比max左小，记下a的位置，否则更新max左
+ * 逆向遍历arr，来到数b，与b右侧的min右比较如果b比min右小，记下b的位置，否则更新min右
+ * 最终b-a+1就是题解
+ */
 public class Code01_MinLengthForSort {
 
 	public static int getMinLength(int[] arr) {

@@ -4,6 +4,18 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+/**
+ * 从两个有序数组中各取一个数作为组合，求组合里sum最大的前k个
+ *
+ * 思路：一个样本作行，一个样本作列，但不是dp
+ * (arr1[n-1],arr2[n-1])这个组合一定是sum最大的组合
+ * 准备一个组合对象的大根堆，和一个标记样本组合的set
+ * 先把右下角定义成对象(i,j,sum)放入大根堆，标记set[i][j]=true
+ * 弹出堆顶，收集结果sum，再将(i-1,j),(i,j-1)放入大根堆，分别标记set[i-1][j]，set[i][j-1]为true
+ * 弹出堆顶，收集结果sum，再将...
+ * 直到收集满K个
+ *
+ */
 public class Code04_TopKSumCrossTwoArrays {
 
 	// 放入大根堆中的结构
@@ -32,6 +44,7 @@ public class Code04_TopKSumCrossTwoArrays {
 			return null;
 		}
 		// arr1 50  arr2 20   1000   topk 100万
+		// topK不能大于所有的组合可能总数
 		topK = Math.min(topK, arr1.length * arr2.length);
 
 		int[] res = new int[topK];
